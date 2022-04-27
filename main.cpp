@@ -1,78 +1,141 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-int isOperator(char c)
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<malloc.h>
+int iCount;struct student
+{	
+ int stuID;                              //学生学号	
+ char Name[100];                  //学生姓名	
+ char Remove[100];               //学生班级	
+ struct student *next;           //存放下一个节点的地址
+};
+ struct student* create()                //输入函数
+{	
+ char str1;	
+ struct student* pHead = NULL;  //初始化链表，使头指针为空	
+ struct student* pNew, *pEnd;    //pNew指向新创建的结点，pEnd指向原来的尾结点
+ iCount = 0;                                //初始化链表长度	
+ pEnd = pNew = (struct student*)malloc(sizeof(struct student));//动态分配一块内存空间	
+ printf("请输入学生姓名:");          //输入学生信息	
+ scanf("%s", &pNew->Name);	getchar();	printf("请输入学生学号:");	
+ scanf("%d", &pNew->stuID);	printf("请输入学生班级:");	
+ scanf("%s", &pNew->Remove);	
+ getchar();	pNew->next = pHead;	
+ pEnd = pNew;	
+ pHead = pNew;
+ iCount++;
+ printf("是否继续输入y/n:");	
+ scanf("%c", &str1);	printf("\n");	
+ while (str1!='n')	
+ {		
+  iCount++;                       //结点数加1	
+  pNew = (struct student*)malloc(sizeof(struct student));//动态分配一块内存空间		
+  printf("请输入学生姓名:");      //输入学生信息		
+  scanf("%s", &pNew->Name);	
+  getchar();	
+  printf("请输入学生学号:");	
+  scanf("%d", &pNew->stuID);		
+  printf("请输入学生班级:");	
+  scanf("%s", &pNew->Remove);
+  getchar();	
+  pNew->next = NULL;	
+  pEnd->next = pNew;	
+  pEnd = pNew;	
+  printf("是否继续输入y/n:");	
+  scanf("%c", &str1);		
+  printf("\n");
+ }	
+ return pHead;}void Print(struct student* pHead)  //输出函数
 {
-	if(c=='+'||c=='-'||c=='*'||c=='/')
-		return 1;
-	else return 0;
-
+ struct student *pTemp;	
+ int iIndex = 1;	
+ printf("the List has %d members:----\n", iCount);	
+ printf("\n");
+ pTemp = pHead;
+ while (pTemp != NULL)	
+ {	
+  printf("班级:%-15s 姓名:%-10s 学号:%-10d\n", pTemp->Remove, pTemp->Name, pTemp->stuID);
+  pTemp = pTemp->next;	
+  iIndex++;	
+  }	
+  printf("\n");
 }
-void moveOperator(char *p)
-{
-	while(*p!='\0')
-	{
-		*p=*(p+1);
-		p++;
-	}
-}
+void _delete(struct student* pHead)     //删除函数
+{	
+ int id,r=1,i;
 
-void moveOperand(float *p,float *end){
-	while(p!=end)
-	{
-		*p=*(p+1);
-		p++;
-	}
+ struct student *pTemp;  //临时指针
+ struct student *pPre;            //表示要删除结点前的结点	
+ pTemp = pHead;                   //得到头结点
+ pPre = pTemp;	
+ printf("请输入要删除学号");	
+ scanf("%d", &id);
+ getchar();	
+ while (1)
+ {
 
+
+  if ( pTemp->stuID!=id)
+  {			
+  r++;		
+}		
+else		
+{			
+pTemp = pHead; break;	
+	}		
+printf("%d\n", r);		
+pTemp = pTemp->next;	
+		}	
+for (i = 1; i < r; i++)	
+{		
+ pPre = pTemp;	
+ pTemp = pTemp->next;
 }
+ pPre->next = pTemp->next;	free(pTemp);
+ iCount--;	printf("---删除成功---\n");
+}
+void find(struct student* pHead)     //信息查询
+{	
+ int _id,j=0;	struct student *pTemp;           //临时指针	
+ pTemp = pHead;
+ printf("请输入你要查询的学生学号：");	
+ scanf("%d", &_id);
+ while (pTemp->stuID != NULL)
+ {		
+  if (pTemp->stuID == _id)		
+   {			
+     printf("班级:%-15s 姓名:%-10s 学号:%-10d\n\n", pTemp->Remove, pTemp->Name, pTemp->stuID);
+       j++;  
+      break;
+   }	
+  else if (j == 0)	
+   {			
+     printf("---没有查询到信息---\n\n"); 
+     break;	
+   }				
+    pTemp = pTemp->next;	
+  }
+	
+  }
 int main()
 {
-	char strExp[]="1-2.5*4+10.2/5.1";
-	char operators[100]={'\0'};
-	float operands[100];
-}
-
-int operatorsIndex=0;
-for(int i=0;i<strlen(strExp);i++)
-{
-	if(isOperator(strExp[i])){
-		operators[operatorsIndex]=strExp[i];
-		operatorsIndex++;
-	}
-}
-
-puts(operator);
-int operatorsIndex=0
-for(int i=0;i<strlen(strExp);i++){
-	char temp[100]={'\0'};
-	int tempIndex=0;
-	while(!isOperator(strExp[i])){
-		temp[tempIndex]=strExp[i];
-		i++;
-		tempIndex++;
-	}
-	float floatV=atof(temp);
-	operands[operandsIndex++]=floatV;
-
-}
-for(int i=0;i<operandsIndex;i++)
-printf("%0.lf\n",operands[i]);
-char *poperator=operators;
-float *poperand=operands;
-while(*poperator!='\0'){
-	if(*poperator=='*'){
-		float lefOperand=*poperand;
-		float rightOperand=*(poperand+1);
-		float res=leftOperand*rightOperand;
-		*poperand=res;
-		moveOperatoe(poperator);
-		moveOperand(poperand+1,&operands[operandsIndex--]);
-	}
-	else{
-		poperator++;
-		poperand++;
-	}
-}
-puts(operators);
-return 0;
+int b;
+struct student* pHead;
+while(1)	
+ {	
+   printf("删除信息输入 1\n");		
+   printf("添加信息输入 2\n");		
+   printf("输出信息输入 3\n");		
+   printf("查询信息输入 4\n");		
+   scanf("%d", &b);		
+   getchar();		
+   switch (b)		
+   {		
+    case 1:_delete(pHead);   break;     //删除		
+    case 2:pHead = create(); break;    //添加		
+    case 3:Print(pHead);     break;      //输出		
+    case 4:find(pHead);      break;      //查询		
+    }	
+   }		
+   return 0;
 }
