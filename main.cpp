@@ -1,141 +1,82 @@
 #include<stdio.h>
 #include<string.h>
-#include<stdlib.h>
-#include<malloc.h>
-int iCount;struct student
-{	
- int stuID;                              //学生学号	
- char Name[100];                  //学生姓名	
- char Remove[100];               //学生班级	
- struct student *next;           //存放下一个节点的地址
-};
- struct student* create()                //输入函数
-{	
- char str1;	
- struct student* pHead = NULL;  //初始化链表，使头指针为空	
- struct student* pNew, *pEnd;    //pNew指向新创建的结点，pEnd指向原来的尾结点
- iCount = 0;                                //初始化链表长度	
- pEnd = pNew = (struct student*)malloc(sizeof(struct student));//动态分配一块内存空间	
- printf("请输入学生姓名:");          //输入学生信息	
- scanf("%s", &pNew->Name);	getchar();	printf("请输入学生学号:");	
- scanf("%d", &pNew->stuID);	printf("请输入学生班级:");	
- scanf("%s", &pNew->Remove);	
- getchar();	pNew->next = pHead;	
- pEnd = pNew;	
- pHead = pNew;
- iCount++;
- printf("是否继续输入y/n:");	
- scanf("%c", &str1);	printf("\n");	
- while (str1!='n')	
- {		
-  iCount++;                       //结点数加1	
-  pNew = (struct student*)malloc(sizeof(struct student));//动态分配一块内存空间		
-  printf("请输入学生姓名:");      //输入学生信息		
-  scanf("%s", &pNew->Name);	
-  getchar();	
-  printf("请输入学生学号:");	
-  scanf("%d", &pNew->stuID);		
-  printf("请输入学生班级:");	
-  scanf("%s", &pNew->Remove);
-  getchar();	
-  pNew->next = NULL;	
-  pEnd->next = pNew;	
-  pEnd = pNew;	
-  printf("是否继续输入y/n:");	
-  scanf("%c", &str1);		
-  printf("\n");
- }	
- return pHead;}void Print(struct student* pHead)  //输出函数
+
+struct sut
 {
- struct student *pTemp;	
- int iIndex = 1;	
- printf("the List has %d members:----\n", iCount);	
- printf("\n");
- pTemp = pHead;
- while (pTemp != NULL)	
- {	
-  printf("班级:%-15s 姓名:%-10s 学号:%-10d\n", pTemp->Remove, pTemp->Name, pTemp->stuID);
-  pTemp = pTemp->next;	
-  iIndex++;	
-  }	
-  printf("\n");
-}
-void _delete(struct student* pHead)     //删除函数
-{	
- int id,r=1,i;
-
- struct student *pTemp;  //临时指针
- struct student *pPre;            //表示要删除结点前的结点	
- pTemp = pHead;                   //得到头结点
- pPre = pTemp;	
- printf("请输入要删除学号");	
- scanf("%d", &id);
- getchar();	
- while (1)
- {
-
-
-  if ( pTemp->stuID!=id)
-  {			
-  r++;		
-}		
-else		
-{			
-pTemp = pHead; break;	
-	}		
-printf("%d\n", r);		
-pTemp = pTemp->next;	
-		}	
-for (i = 1; i < r; i++)	
-{		
- pPre = pTemp;	
- pTemp = pTemp->next;
-}
- pPre->next = pTemp->next;	free(pTemp);
- iCount--;	printf("---删除成功---\n");
-}
-void find(struct student* pHead)     //信息查询
-{	
- int _id,j=0;	struct student *pTemp;           //临时指针	
- pTemp = pHead;
- printf("请输入你要查询的学生学号：");	
- scanf("%d", &_id);
- while (pTemp->stuID != NULL)
- {		
-  if (pTemp->stuID == _id)		
-   {			
-     printf("班级:%-15s 姓名:%-10s 学号:%-10d\n\n", pTemp->Remove, pTemp->Name, pTemp->stuID);
-       j++;  
-      break;
-   }	
-  else if (j == 0)	
-   {			
-     printf("---没有查询到信息---\n\n"); 
-     break;	
-   }				
-    pTemp = pTemp->next;	
-  }
-	
-  }
+	char nation[100];//国家
+	int goldNumber;  //金牌数
+	int silverNumber;//银牌数
+	int bronzeNumber;//铜牌数
+	int sum;         //总数
+};
 int main()
 {
-int b;
-struct student* pHead;
-while(1)	
- {	
-   printf("删除信息输入 1\n");		
-   printf("添加信息输入 2\n");		
-   printf("输出信息输入 3\n");		
-   printf("查询信息输入 4\n");		
-   scanf("%d", &b);		
-   getchar();		
-   switch (b)		
-   {		
-    case 1:_delete(pHead);   break;     //删除		
-    case 2:pHead = create(); break;    //添加		
-    case 3:Print(pHead);     break;      //输出		
-    case 4:find(pHead);      break;      //查询		
-    }	
-   }		
-   return 0;
+	struct sut a[100] = {'\0'};
+	struct sut *pa = a;
+	char str[9][100] = { '\0' };
+	int i;
+	FILE *fp = fopen("D:\\VS2015\\file.txt", "r");
+	if (fp == NULL)
+	{
+		printf("Error\n");
+		return 0;
+	}
+	
+	while (fscanf(fp, "%s %d %d %d %d", pa->nation, &pa->goldNumber, &pa->silverNumber, &pa->bronzeNumber, &pa->sum) != EOF)
+	{
+		printf("%-12s%-8d%-8d%-8d%-8d\n", pa->nation, pa->goldNumber, pa->silverNumber, pa->bronzeNumber, pa->sum);
+		pa++;
+	}
+	fclose(fp);
+	
+	struct sut t;
+	for (i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			if (a[j].sum > a[j + 1].sum)
+			{
+				t = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = t;
+			}
+		}
+	}
+
+	
+	printf("\n\n");
+	FILE *max = fopen("D:\\VS2015\\now1.txt", "w");    //文件指针（奖牌数最多的国家）
+	FILE *min = fopen("D:\\VS2015\\now2.txt", "w");    //文件指针（奖牌数最少的国家）
+	fprintf(max, "%-12s%-8d%-8d%-8d%-8d\n", a[7].nation, a[7].goldNumber, a[7].silverNumber, a[7].bronzeNumber, a[7].sum); //将奖牌数最多的国家写到文件now1.txt中
+	fprintf(min, "%-12s%-8d%-8d%-8d%-8d\n", a[0].nation, a[0].goldNumber, a[0].silverNumber, a[0].bronzeNumber, a[0].sum); //将奖牌数最少的国家写到文件now2.txt中
+	fclose(max); //关闭文件
+	fclose(min);
+	
+
+	printf("---奖牌数最多的国家是:%-12s 金牌:%-8d 银牌:%-8d 铜牌:%-8d 奖牌数:%-8d---\n"
+		, a[7].nation, a[7].goldNumber, a[7].silverNumber, a[7].bronzeNumber, a[7].sum);  //打印奖牌数最多的国家到屏幕
+	printf("---奖牌数最少的国家是:%-12s 金牌:%-8d 银牌:%-8d 铜牌:%-8d 奖牌数:%-8d---\n"   //打印奖牌数最少的国家到屏幕
+		, a[0].nation, a[0].goldNumber, a[0].silverNumber, a[0].bronzeNumber, a[0].sum);
+
+
+	for (i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			if (a[j].goldNumber > a[j + 1].goldNumber)
+			{
+				t = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = t;
+			}
+		}
+	}
+
+	FILE *wfp = fopen("D:\\VS2015\\file_sorted.txt", "w");  //按照金牌奖牌数量进行升序排序并输出结果到 file_sorted.txt
+	for (i = 0; i<8; i++)
+	{
+		fprintf(wfp, "%-12s%-8d%-8d%-8d%-8d\n", a[i].nation, a[i].goldNumber, a[i].silverNumber, a[i].bronzeNumber, a[i].sum);
+	}
+	fclose(wfp);//关闭文件
+	return 0;
 }
