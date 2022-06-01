@@ -1,82 +1,176 @@
 #include<stdio.h>
 #include<string.h>
-
-struct sut
+#include<stdlib.h>
+struct Account
 {
-	char nation[100];//国家
-	int goldNumber;  //金牌数
-	int silverNumber;//银牌数
-	int bronzeNumber;//铜牌数
-	int sum;         //总数
+	char name[100];
+	char password[7];
+	char idcard[19];
+	char tel[12];
+	char username[100];//卡号待查询
+	float money;
+	struct Account *next;
 };
+
+typedef struct Account Account;
+	Account *head=NULL;
+	Account *tail=NULL;
+
+void loadDate()//更新数据
+{
+	FILE *fp=fopen("E://name.txt","r");
+	if(fp!=NULL)
+	{
+		while(!feof(fp))
+		{
+			Account *Node=(Account *)malloc(sizeof(Account));
+			fscanf(fp,"%s %s %s\n",Node->name,Node->username,Node->password);
+			Node->next=NULL;
+			if(head==NULL)
+			{
+				head=Node;
+				tail=Node;
+			}
+			else
+			{
+				tail->next=Node;
+				tail=Node;
+			}
+		}
+	printf("加载完毕！\n");
+	fclose(fp);
+	}
+}
+void printAccount(Account a)//打印账户信息
+{
+	printf("%s\t%s\t%s\n",a.name,a.username,a.password);
+}
+void printLinkedList()//打印链表
+{
+	Account *curp=head;
+	while(curp!=NULL)
+	{
+		printAccount(*curp);
+		curp=curp->next;
+	}
+}
+void saveDate()//保存数据
+{
+	FILE *fp=fopen("E:/name.txt","w");
+	if(fp!=NULL)
+	{
+		Account *curp=head;
+		while(curp!=NULL)
+		{
+			fprintf(fp,"%s\t%s\t%s\n",curp->name,curp->username,curp->password);
+			curp=curp->next;
+		}
+		fclose(fp);
+	}
+}
+
+void signUp()//登录
+{
+	Account a;
+	printf("请输入卡号：\n");
+	scanf("%s",a.username);
+
+	printf("请输入密码：\n");
+	scanf("%s",a.password);
+	
+}
+
+void creataccount()//创建账号
+{
+	Account a;
+	while(1)
+	{
+	printf("请输入姓名：\n身份证号：\n电话号码：\n");
+	scanf("%s %s %s",a.name,a.idcard,a.tel);
+	printf("请输入初始金额：\n");
+	scanf("%f",&a.money);
+	printf("正在创建账户，请稍等\n");
+	//随机卡号
+	stand(time(0));
+	int m=rand();
+	a.username=m%1000+10000000;
+	printf("这是您的卡号\n");
+	printf("%s",a.username);
+	}
+}
+
+void signIn()
+{
+	Account a,b;
+	int n;
+	printf("请输入账号：\n");
+	printf("请输入密码：\n");
+	scanf("%s",a.password);
+	printf("请在输入一次密码:\n");
+	scanf("%s",b.password);
+	if(strcmp(a.password,a.password)==0)
+	{
+		printf("请选择业务\n");
+		printf("=====================================\n");
+		printf("1.存款\t2.转账\t3.查询余额\n");
+		printf("4.修改密码\t5.打回执单\t6.退卡\n");
+		printf("=====================================\n");
+		while(1)
+		{
+			printf("请输入你要选择的数字\n");
+			scanf("%d",&n);
+			switch(n)
+			{
+			case 1:cunkuan();break;
+			case 2:zhuanzhang();break;
+			case 3:chaxun();break;
+			case 4:xiugaimima();break;
+			case 5:huizhidan();break;
+			case 6:tuika();break;
+			}
+		}
+	}
+
+}
+
+void showChinese()
+{
+	
+	printf("输入1，创建账户\n");
+	printf("输入2，登录\n");
+	char c;
+	
+	scanf("%s",&c);
+	if(c=='1')
+	{
+		signUp();
+	}
+	else if(c=='2')
+	{
+		signIn();
+	}
+}
+
+void showEnglish()
+{
+	//do something...
+}
+
 int main()
 {
-	struct sut a[100] = {'\0'};
-	struct sut *pa = a;
-	char str[9][100] = { '\0' };
-	int i;
-	FILE *fp = fopen("D:\\VS2015\\file.txt", "r");
-	if (fp == NULL)
+	printf("输入1，选择中文\n");
+	printf("Input 2，Show English\n");
+	char c;
+	scanf("%c",&c);
+	if(c=='1')
 	{
-		printf("Error\n");
-		return 0;
+		showChinese();//显示中文菜单
 	}
-	
-	while (fscanf(fp, "%s %d %d %d %d", pa->nation, &pa->goldNumber, &pa->silverNumber, &pa->bronzeNumber, &pa->sum) != EOF)
+	else if(c=='2')
 	{
-		printf("%-12s%-8d%-8d%-8d%-8d\n", pa->nation, pa->goldNumber, pa->silverNumber, pa->bronzeNumber, pa->sum);
-		pa++;
-	}
-	fclose(fp);
-	
-	struct sut t;
-	for (i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
-			if (a[j].sum > a[j + 1].sum)
-			{
-				t = a[j];
-				a[j] = a[j + 1];
-				a[j + 1] = t;
-			}
-		}
+		showEnglish();//显示英文菜单
 	}
 
-	
-	printf("\n\n");
-	FILE *max = fopen("D:\\VS2015\\now1.txt", "w");    //文件指针（奖牌数最多的国家）
-	FILE *min = fopen("D:\\VS2015\\now2.txt", "w");    //文件指针（奖牌数最少的国家）
-	fprintf(max, "%-12s%-8d%-8d%-8d%-8d\n", a[7].nation, a[7].goldNumber, a[7].silverNumber, a[7].bronzeNumber, a[7].sum); //将奖牌数最多的国家写到文件now1.txt中
-	fprintf(min, "%-12s%-8d%-8d%-8d%-8d\n", a[0].nation, a[0].goldNumber, a[0].silverNumber, a[0].bronzeNumber, a[0].sum); //将奖牌数最少的国家写到文件now2.txt中
-	fclose(max); //关闭文件
-	fclose(min);
-	
-
-	printf("---奖牌数最多的国家是:%-12s 金牌:%-8d 银牌:%-8d 铜牌:%-8d 奖牌数:%-8d---\n"
-		, a[7].nation, a[7].goldNumber, a[7].silverNumber, a[7].bronzeNumber, a[7].sum);  //打印奖牌数最多的国家到屏幕
-	printf("---奖牌数最少的国家是:%-12s 金牌:%-8d 银牌:%-8d 铜牌:%-8d 奖牌数:%-8d---\n"   //打印奖牌数最少的国家到屏幕
-		, a[0].nation, a[0].goldNumber, a[0].silverNumber, a[0].bronzeNumber, a[0].sum);
-
-
-	for (i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
-			if (a[j].goldNumber > a[j + 1].goldNumber)
-			{
-				t = a[j];
-				a[j] = a[j + 1];
-				a[j + 1] = t;
-			}
-		}
-	}
-
-	FILE *wfp = fopen("D:\\VS2015\\file_sorted.txt", "w");  //按照金牌奖牌数量进行升序排序并输出结果到 file_sorted.txt
-	for (i = 0; i<8; i++)
-	{
-		fprintf(wfp, "%-12s%-8d%-8d%-8d%-8d\n", a[i].nation, a[i].goldNumber, a[i].silverNumber, a[i].bronzeNumber, a[i].sum);
-	}
-	fclose(wfp);//关闭文件
+loadDate();
 	return 0;
 }
